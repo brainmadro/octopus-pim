@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+  <link rel="stylesheet" href="/stylesheets/promos.css">
+</head>
+
+<body>
+  <section class="main">
+    <div class="promo-column">
+      <h4>Arrivals</h4>
+      <form action="/promos-add-product" method="post">
+        <label for="arrives_sku-input">SKU: </label>
+        <input type="text" name="sku" id="arrives-sku-input">
+        <input type="hidden" name="type" value="arrives">
+        <button type="submit">Añadir</button>
+      </form>
+      <ol class="products-list">
+        <% arrives.forEach(item => { %>
+          <li class="product-in-promo">
+            <span><%= item.name %></span>
+            <button class="remove-button" data-sku="<%= item.sku %>" data-type="arrives"><i class="fa-solid fa-circle-minus"></i></button>
+          </li>
+        <% }) %>          
+      </ol>
+    </div>
+    <div class="promo-column">
+      <h4>Best Sellers</h4>
+      <form action="/promos-add-product" method="post">
+        <label for="best-seller-sku-input">SKU: </label>
+        <input type="text" name="sku" id="best-seller-sku-input">
+        <input type="hidden" name="type" value="best_sellers">
+        <button type="submit">Añadir</button>
+      </form>
+      <ol class="products-list">
+        <% best_sellers.forEach(item => { %>
+          <li class="product-in-promo">
+            <span><%= item.name %></span>
+            <button class="remove-button" data-sku="<%= item.sku %>" data-type="best_sellers"><i class="fa-solid fa-circle-minus"></i></button>
+          </li>
+        <% }) %>          
+      </ol>
+    </div>
+    <div class="promo-column">
+      <h4>Limited Offers</h4>
+      <form action="/promos-add-product" method="post">
+        <label for="limited-offers-sku-input">SKU: </label>
+        <input type="text" name="sku" id="limited-offers-sku-input">
+        <input type="hidden" name="type" value="limited_offers">
+        <button type="submit">Añadir</button>
+      </form>
+      <ol class="products-list">
+        <% limited_offers.forEach(item => { %>
+          <li class="product-in-promo">
+            <span><%= item.name %></span>
+            <button class="remove-button" data-sku="<%= item.sku %>" data-type="limited_offers"><i class="fa-solid fa-circle-minus"></i></button>
+          </li>
+        <% }) %>          
+      </ol>
+    </div>
+    <div class="promo-column">
+      <h4>Today's Promo</h4>
+      <form action="/promos-add-product" method="post">
+        <label for="todays-promo-sku-input">SKU: </label>
+        <input type="text" name="sku" id="todays-promo-arrives-sku-input">
+        <input type="hidden" name="type" value="todays_promo">
+        <button type="submit">Añadir</button>
+      </form>
+      <ol class="products-list">
+        <% todays_promo.forEach(item => { %>
+          <li class="product-in-promo">
+            <span><%= item.name %></span>
+            <button class="remove-button" data-sku="<%= item.sku %>" data-type="todays_promo"><i class="fa-solid fa-circle-minus"></i></button>
+          </li>
+        <% }) %>          
+      </ol>
+    </div>
+    <div class="promo-column">
+      <h4>Soon</h4>
+      <form action="/promos-add-product" method="post">
+        <label for="soon-sku-input">SKU: </label>
+        <input type="text" name="sku" id="soon-sku-input">
+        <input type="hidden" name="type" value="soon">
+        <button type="submit">Añadir</button>
+      </form>
+      <ol class="products-list">
+        <% soon.forEach(item => { %>
+          <li class="product-in-promo">
+            <span><%= item.name %></span>
+            <button class="remove-button" data-sku="<%= item.sku %>" data-type="soon"><i class="fa-solid fa-circle-minus"></i></button>
+          </li>
+        <% }) %>          
+      </ol>
+    </div>
+  </section>
+  <script src="/scripts/promos.js"></script>
+</body>
+</html>

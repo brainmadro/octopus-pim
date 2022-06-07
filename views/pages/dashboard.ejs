@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+  <link rel="stylesheet" href="/stylesheets/dashboard.css">
+</head>
+
+<body>
+  <section class="main promos-container">
+    <h3 class="section-title">Promotions</h3>
+    <div class="section-content">
+      <div class="promo-column">
+        <h4>Arrivals</h4>
+        <form action="/promos-add-product" method="post">
+          <label for="second-promo_sku-input">SKU: </label>
+          <input type="text" name="sku" id="second-promo-sku-input">
+          <input type="hidden" name="type" value="second_promo">
+          <button type="submit">Añadir</button>
+        </form>
+        <ul class="products-list">
+          <% second_promo.forEach(item => { %>
+            <li class="product-in-promo">
+              <span><%= item.name %></span>
+              <button class="remove-button" data-sku="<%= item.sku %>" data-type="second_promo"><i class="fa-solid fa-circle-minus"></i></button>
+            </li>
+          <% }) %>          
+        </ol>
+      </div>
+      <div class="promo-column">
+        <h4>Best Sellers</h4>
+        <form action="/promos-add-product" method="post">
+          <label for="third-promo-sku-input">SKU: </label>
+          <input type="text" name="sku" id="third-promo-sku-input">
+          <input type="hidden" name="type" value="third_promo">
+          <button type="submit">Añadir</button>
+        </form>
+        <ul class="products-list">
+          <% third_promo.forEach(item => { %>
+            <li class="product-in-promo">
+              <span><%= item.name %></span>
+              <button class="remove-button" data-sku="<%= item.sku %>" data-type="third_promo"><i class="fa-solid fa-circle-minus"></i></button>
+            </li>
+          <% }) %>          
+        </ol>
+      </div>
+      <div class="promo-column">
+        <h4>Limited Offers</h4>
+        <form action="/promos-add-product" method="post">
+          <label for="fourth-promo-sku-input">SKU: </label>
+          <input type="text" name="sku" id="fourth-promo-sku-input">
+          <input type="hidden" name="type" value="fourth_promo">
+          <button type="submit">Añadir</button>
+        </form>
+        <ul class="products-list">
+          <% fourth_promo.forEach(item => { %>
+            <li class="product-in-promo">
+              <span><%= item.name %></span>
+              <button class="remove-button" data-sku="<%= item.sku %>" data-type="fourth_promo"><i class="fa-solid fa-circle-minus"></i></button>
+            </li>
+          <% }) %>          
+        </ol>
+      </div>
+      <div class="promo-column">
+        <h4>Today's Product</h4>
+        <form action="/promos-add-product" method="post">
+          <label for="first-promo-sku-input">SKU: </label>
+          <input type="text" name="sku" id="first-promo-sku-input">
+          <input type="hidden" name="type" value="first_promo">
+          <button type="submit">Añadir</button>
+        </form>
+        <ul class="products-list">
+          <% first_promo.forEach(item => { %>
+            <li class="product-in-promo">
+              <span><%= item.name %></span>
+              <button class="remove-button" data-sku="<%= item.sku %>" data-type="first_promo"><i class="fa-solid fa-circle-minus"></i></button>
+            </li>
+          <% }) %>          
+        </ol>
+      </div>
+      <div class="promo-column">
+        <h4>Soon</h4>
+        <form action="/promos-add-product" method="post">
+          <label for="fifth-promo-sku-input">SKU: </label>
+          <input type="text" name="sku" id="fifth-promo-sku-input">
+          <input type="hidden" name="type" value="fifth_promo">
+          <button type="submit">Añadir</button>
+        </form>
+        <ul class="products-list">
+          <% fifth_promo.forEach(item => { %>
+            <li class="product-in-promo">
+              <span><%= item.name %></span>
+              <button class="remove-button" data-sku="<%= item.sku %>" data-type="fifth_promo"><i class="fa-solid fa-circle-minus"></i></button>
+            </li>
+          <% }) %>          
+        </ol>
+      </div>
+    </div>
+  </section>
+  <section class="main sync-container" style="display: block;">
+    <h3 class="section-title">Synchronizations</h3>
+    <div class="section-content">
+      <div><button class="sync-button" data-sync="inventory">Inventory</button><var id="inventory-progress"></var></div>
+      <div><button class="sync-button" data-sync="prices">Price</button><var id="prices-progress"></var></div>
+      <div><button class="sync-button" data-sync="bulk-pricing">Quantity Breaks</button><var id="bulk-pricing-progress"></var></div>
+      <div><button class="sync-button" data-sync="purchase-dates">Arrival Dates</button><var id="purchase-dates-progress"></var></div>
+      <div><button class="get-button" data-sync="products-from-bigcommerce">Product Info</button><var id="products-from-bigcommerce-progress"></var></div>
+    </div>
+  </section>
+  <section class="main product-relations-container">
+    <h3 class="section-title">Product Relations</h3>
+    <div class="section-content">
+      <div class="create-relations-container">
+        <button id="create-relations">Create Relations</button>
+        <div class="pricelist-container">
+          <label for="pricelist-creating">Type: </label>
+          <input type="text" name="pricelist-creating" id="pricelist-creating-input" value="2" disabled>
+        </div>      
+        <textarea name="create-relations-txtarea" id="create-relations-txtarea" cols="30" rows="10"></textarea>
+        <var id="creating-progress"></var>
+      </div>
+      <div class="delete-relations-container">
+        <button id="delete-relations">Delete Relations</button>
+        <div class="pricelist-container">
+          <label for="pricelist-deleting">Type: </label>
+          <input type="text" name="pricelist-deleting" id="pricelist-deleting-input" value="2" disabled>
+        </div>
+        <textarea name="delete-relations-txtarea" id="delete-relations-txtarea" cols="30" rows="10"></textarea>
+        <var id="deleting-progress"></var>
+      </div>
+    </div>
+  </section>
+  <script src="/scripts/dashboard.js"></script>
+</body>
+</html>

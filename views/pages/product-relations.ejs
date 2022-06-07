@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+  <link rel="stylesheet" href="/stylesheets/promos.css">
+</head>
+
+<body>
+  <section class="main">
+    <div class="create-relations-container">
+      <button id="create-relations">Create Relations</button><var id="creating-progress"></var>
+      <input type="text" name="pricelist-creating" id="pricelist-creating">
+      <textarea name="create-relations-txtarea" id="create-relations-txtarea" cols="30" rows="10"></textarea>
+    </div>
+    <div class="delete-relations-container">
+      <button id="delete-relations">Delete Relations</button><var id="deleting-progress"></var>
+      <input type="text" name="pricelist-deleting" id="pricelist-deleting">
+      <textarea name="delete-relations-txtarea" id="delete-relations-txtarea" cols="30" rows="10"></textarea>
+    </div>
+  </section>
+  <script src="/scripts/product-relations.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+:root {
+    --main-bg-color: #f6f7f9;
+    --main-dark-bg-color: #11182f;
+    --main-text-color: #b4b4b4;
+    --text-dark-color: #535558;
+    --text-darkest-color: #11182f;
+    --input-border-color: #b4b4b4;
+    --border-main-color: #e6e6e6;
+    --border-radius: 8px;
+    --btn-primary-color: #1458e9;
+    --btn-primary-hover-color: #286090;
+    --btn-primary-text-color: #ffffff;
+    --btn-secundary-color: #8198ef;
+    --btn-secundary-hover-color: #286090;
+    --btn-secundary-text-color: #8198ef;
+    --section-bg-color: #ffffff;
+    --form-bg-color: #ffffff;
+    --input-bg-color: #edf1f8;
+    --input-text-color: #757575;
+    --input-readolny-bg-color: #f1f1f1;
+    --input-readolny-text-color: #979797;
+    --footer-bg-color: #11182f;
+    --footer-text-color: #9fa6bd;
+    --footer-border-color: #9fa6bd;
+    --homepage-section-hero-title-text-color: #5dd8e4;
+    --icons-color: #1458e9;
+    --reservations-bg-color: #9fe914;
+    --intentions-disabled-bg-color: #b2d3e9;
+    --intentions-disabled-text-color: #5aaee6;
+    --reservations-disabled-bg-color: #dceebb;
+    --reservations-disabled-text-color: #beee65;
+}
+
+body {
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2em;
+    margin: 3em 2em;
+    font-family: "Open Sans", "Trebuchet MS", sans-serif;
+}
+
+button {
+    background-color: var(--btn-primary-color);
+    border: none;
+    border-radius: 5px;
+    color: var(--btn-primary-text-color);
+    font-weight: bold;
+    padding: .5em 2em;
+}
+
+h3, h4 {
+    font-weight: 500;
+    color: var(--text-dark-color);
+}
+
+input {
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+    color: var(--text-dark-color);
+    padding: .5em;
+}
+
+label {
+    color: var(--btn-secundary-text-color);
+}
+
+ul {
+    list-style: none;
+    padding: 1em .5em
+}
+
+var {
+    font-weight: 200;
+    margin-left: 1em;
+}
+
+.main {
+    background-color: var(--section-bg-color);
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    display: flex;
+    flex-direction: column;
+    padding: 2em 4em;
+}
+
+.create-relations-container, .delete-relations-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1em;
+    gap: 1em;
+}
+
+.pricelist-container input {
+    max-width: 50%;
+}
+
+.product-in-promo {
+    background-color: var(--main-bg-color);
+    border-radius: 6px;
+    color: var(--main-text-color);
+    display: flex;
+    font-weight: 500;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    padding: .7em .5em;
+}
+
+.promo-column {
+    max-width: 20%;
+    padding: 0 .5em;
+}
+
+.promos-container {
+    grid-column: 1 /span 3;
+}
+
+.remove-button {
+    background-color: transparent;
+    color: var(--icons-color);
+}
+
+.section-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.section-title {
+    color: var(--text-darkest-color);
+    font-weight: bold;
+}
+
+.sync-container .section-content {
+    flex-direction: column;
+    gap: 1em;
+}
