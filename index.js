@@ -878,9 +878,6 @@ function deleteProductRelationsJasper(type, relatedProducts) {
     "UserName": "manager"
   });
 
-  var proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
-  var agent = new HttpsProxyAgent(proxy);
-
   var options = {
     host: 'glinkaudio.com',
     path: '/b1s/v1/Login',
@@ -888,7 +885,6 @@ function deleteProductRelationsJasper(type, relatedProducts) {
     port: '50000',
     method: 'POST',
     rejectUnauthorized: false,
-    agent: agent,
     headers: {
       "content-type": "text/plain",
       "cookie": "B1SESSION; ROUTEID=.node1"
@@ -2516,7 +2512,6 @@ function sendGETPromised(hostname, path, headers) {
 
 function sendGETStaticIPPromised(hostname, path, headers) {
   return new Promise(resolve => {
-    var agent = new HttpsProxyAgent(process.env.QUOTAGUARDSTATIC_URL);
     headers['Content-Type'] = 'application/json';
     //headers['Content-Length'] = body.length;
 
@@ -2525,8 +2520,7 @@ function sendGETStaticIPPromised(hostname, path, headers) {
       port: 443,
       path: path,
       method: 'GET',
-      headers: headers,
-      agent: agent
+      headers: headers
     }
 
     const req = https.request(options, res => {
@@ -2929,8 +2923,6 @@ async function testInventory(sendSMS) {
 class RequestSAP {
   constructor(session) {
     this.session = session;
-    var proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
-    this.agent = new HttpsProxyAgent(proxy);
   }
 
   getItems(select, filter, skip) {
@@ -2940,7 +2932,6 @@ class RequestSAP {
       port: '50000',
       method: 'GET',
       rejectUnauthorized: false,
-      agent: this.agent,
       headers: {
         "content-type": "text/plain",
         "cookie": "B1SESSION=" + this.session + "; ROUTEID=.node1"
@@ -2960,7 +2951,6 @@ class RequestSAP {
       port: '50000',
       method: 'GET',
       rejectUnauthorized: false,
-      agent: this.agent,
       headers: {
         "content-type": "text/plain",
         "cookie": "B1SESSION=" + this.session + "; ROUTEID=.node1"
@@ -2980,7 +2970,6 @@ class RequestSAP {
       port: '50000',
       method: 'GET',
       rejectUnauthorized: false,
-      agent: this.agent,
       headers: {
         //'User-Agent': USER_AGENT,
         "content-type": "text/plain",
@@ -2995,7 +2984,6 @@ class RequestSAP {
           'content-type': 'application/x-www-form-urlencoded',
           "cookie": "B1SESSION=" + this.session + "; ROUTEID=.node1"
         },
-        agent: this.agent,
         timeout: 10000,
         followRedirect: true,
         rejectUnauthorized: false,
@@ -3015,7 +3003,6 @@ class RequestSAP {
       port: '50000',
       method: 'GET',
       rejectUnauthorized: false,
-      agent: this.agent,
       headers: {
         "content-type": "text/plain",
         "cookie": "B1SESSION=" + this.session + "; ROUTEID=.node1"
