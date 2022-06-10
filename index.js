@@ -1,10 +1,8 @@
 const express = require('express')
 const path = require('path')
 const fs = require('fs')
-const url = require("url")
 const https = require('https')
 const ipapi = require('ipapi.co')
-const cors = require('cors');
 const readline = require('readline')
 const bodyParser = require('body-parser')
 const Shopify = require('shopify-api-node')
@@ -15,9 +13,7 @@ const admin = require("firebase-admin")
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 const { getDatabase } = require('firebase-admin/database');
-const { resolve } = require('path')
-const { rejects } = require('assert')
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5100
 
 
 //Inicialization
@@ -42,6 +38,25 @@ const shopify = new Shopify({
   password: process.env.SHOPIFY_ACCESS_TOKEN,
   apiVersion: "2021-10"
 });
+
+const { Client } = require('pg');
+const config = ({
+  user: "doadmin",
+  password: "AVNS_l4bwNxfXNaMgkUz_Uzr",
+  host: "db-postgresql-nyc3-38904-do-user-9878983-0.b.db.ondigitalocean.com",
+  port: "25060",
+  database: "defaultdb",
+  ssl: { rejectUnauthorized: false }
+});
+
+const clientDB = new Client(config)
+clientDB.connect(err => {
+  if (err) {
+    console.error('connection error', err.stack)
+  } else {
+    console.log('connected')
+  }
+})
 
 /**
  * Firebase Cloud Firestore, disabled due to the quote of request
@@ -91,16 +106,9 @@ express()
   })
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
+  
+  //GET
   .get('/', (req, res) => res.render('pages/index'))
-  /* .get('/promos', async (req, res) => {
-    if(req.query.debug && req.query.debug == 'json') {
-      const promosData = fs.readFileSync(path.join(__dirname + '/data/promo-products.json'));
-      res.send(JSON.parse(promosData));
-    } else {    
-      const response = await getPromos();
-      res.render('pages/promos', response)
-    }
-  }) */
   .get('/dashboard', async (req, res) => {
     if(req.query.debug && req.query.debug == 'promos') {
       const promosData = fs.readFileSync(path.join(__dirname + '/data/promo-products.json'));
@@ -122,8 +130,10 @@ express()
       }, ip);
   })
   .get('/test', (req, res) => {
-    //sincronizarInventarioyPrecios();
-    res.render('pages/index')
+    clientDB
+    .query(req.body.query)
+    .then(response => res.send(response))
+    .catch(e => res.send(e.stack))
   })
   .get('/check-ip', (req, res) => {
     (async () => {
@@ -244,6 +254,8 @@ express()
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(viewedProducts))
   })
+
+  //POST
   .post('/shopify-webhook/bulk-operation', (req, res) => {
     console.log(res.statusCode);
     console.log(req.headers);
@@ -2594,8 +2606,6 @@ async function getPromos() {
   })
 }
 
-getPromos()
-
 async function getViewedProducts() {
   const res = new Array();
   const temp = await productsViewedRef.orderByChild("times_viewed").once('value', snapshot => snapshot, errorGettingData)
@@ -3049,3 +3059,92 @@ fs.watchFile(path.join(__dirname + '/data/items-by-sku.json'), (curr, prev) => {
 
 
 
+function getProductsJasperPostgreSQL() {    
+  const getData = (page) => {
+    sendGETPromised(process.env.JASPER_API_DOMAIN, `/api/v1/products?page=${ page }`, {'Authorization': "Bearer " + process.env.JASPER_ACCESS_TOKEN})
+    .then(response => JSON.parse(response))
+    .then(data => {
+      if (data.hasOwnProperty('products')) {
+        const productsJasper = data.products.filter(x => typeof x.sku != 'undefined');
+        productsJasper.forEach(async item => {
+          const now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}));
+          const text = `INSERT INTO products (jasper_id, name, asset_thumbnail, option_set_id, brand_id, sku, is_bundle, category_ids, is_visible, enabled, desc_short, desc_long, price, inventory, created_at, update_at, featured, barcode, assets, tags, related_products, catalog_main_family_en, catalog_main_family_es, catalog_main_category_en, catalog_main_category_es, catalog_subcategory_en, catalog_subcategory_es) 
+          VALUES (${item.id}, '${item.name}', 1, 1, 1, '${item.sku}', ${(item.is_bundle == 0) ? false : true}, '${JSON.stringify(item.categories.map(x => x.id))}', ${(item.is_visible == 0) ? false : true}, ${(item.enabled == 0) ? false : true}, '${(typeof item.desc_short != 'undefined') ? item.desc_short : ''}', '${(typeof item.desc_long != 'undefined') ? item.desc_long : ''}', '', '', '${now.toISOString()}', '${now.toISOString()}', ${(item.featured == 0) ? false : true}, ${(item.barcodes.length > 0) ? "'{ type: " +  '"UPC-A"' + ", barcode: " + item.barcodes[0].barcode + "}'" : "'{}'"}, '', '', '', '', '', '', '', '', '');`;
+          try {
+            const res = await clientDB.query(text)
+            console.log(res)
+          } catch (error) {
+            console.log(error.stack)
+            console.log(text);
+          }
+        });        
+         if (typeof data.links != 'undefined' && typeof data.links.next == 'string') {
+          const last = new URL(data.links.last).searchParams.get("page");
+          const next = new URL(data.links.next).searchParams.get("page");
+          console.log(`next: ${next} last: ${last}`);
+          setTimeout(() => getData(next), 5000);
+        } else {
+          console.log(data.links);
+        }
+      } else {
+        console.error(data);
+      }      
+    });
+  }
+  getData(1);
+}
+
+//getProductsJasperPostgreSQL()
+
+async function getFromSAP() {
+  var products = [];
+
+  const session = await sapLogin();
+  var requestSAP = new RequestSAP(session);
+
+  async function getData(skip, resolve) {
+    var items = await requestSAP.getItems("ItemCode,U_Catalog_Main_Category,U_Catalog_Sub_Category,U_Catalog_Main_Category_SP,U_Catalog_Sub_Cat_SP,U_Master_Family,U_Master_Family_ES", filtersForSAP, skip);
+    items = JSON.parse(items);
+    products = products.concat(items.value);
+    if (items.hasOwnProperty('odata.nextLink')) {
+      skip += 20;
+      console.log(skip);
+      getData(skip, resolve);
+    } else {
+      products.forEach(async item => {
+        const text = `UPDATE products
+        SET catalog_main_family_en = '${(item.U_Master_Family) ? item.U_Master_Family : ''}' 
+        WHERE sku = '${item.ItemCode}';
+        UPDATE products
+        SET catalog_main_family_es = '${(item.U_Master_Family_ES) ? item.U_Master_Family_ES : ''}' 
+        WHERE sku = '${item.ItemCode}';
+        UPDATE products
+        SET catalog_main_category_en = '${(item.U_Catalog_Main_Category) ? item.U_Catalog_Main_Category : ''}' 
+        WHERE sku = '${item.ItemCode}';
+        UPDATE products
+        SET catalog_main_category_es = '${(item.U_Catalog_Main_Category_SP) ? item.U_Catalog_Main_Category_SP : ''}' 
+        WHERE sku = '${item.ItemCode}';
+        UPDATE products
+        SET catalog_subcategory_en = '${(item.U_Catalog_Sub_Category) ? item.U_Catalog_Sub_Category : ''}' 
+        WHERE sku = '${item.ItemCode}';
+        UPDATE products
+        SET catalog_subcategory_es = '${(item.U_Catalog_Sub_Cat_SP) ? item.U_Catalog_Sub_Cat_SP : ''}' 
+        WHERE sku = '${item.ItemCode}';`;
+        try {
+          const res = await clientDB.query(text)
+          console.log(res)
+        } catch (error) {
+          console.log(error.stack)
+          console.log(text);
+        }
+      });
+    }
+  }
+
+  return new Promise(resolve => {
+    getData(0, resolve)
+  })
+  
+}
+
+getFromSAP()
