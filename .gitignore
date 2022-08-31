@@ -12,3 +12,6 @@ coverage
 # Docker
 Dockerfile
 docker-compose.yml
+
+# Firebase Key
+shophedel-firebase-adminsdk-3nch3-064ccfd700.json
