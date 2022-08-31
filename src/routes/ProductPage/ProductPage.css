@@ -1,0 +1,15 @@
+.product-details-container {
+	background-color:#fff;
+	display: flex;
+	flex-direction: column;
+	padding: 1.2em;
+}
+
+.section-container {
+	border: 1px solid #ccc;
+	padding: 1em;
+}
+
+.info-read-only {
+	color: grey;
+}

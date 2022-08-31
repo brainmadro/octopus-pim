@@ -1,0 +1,27 @@
+.sidebar {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 10%;
+}
+
+    .sidebar nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .sidebar nav a {
+            color: var(--color-text-primary);
+            padding: .8em;
+            text-decoration: none;
+        }
+
+        .sidebar nav a svg {
+            padding-right: 1em;
+        }
+
+        .sidebar nav a:checked {
+            padding: 1em;
+            text-decoration: none;
+        }

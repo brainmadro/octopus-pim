@@ -4,6 +4,7 @@ npm-debug.log
 
 # Local development
 data
+coverage
 *.env
 *.dev
 .DS_Store

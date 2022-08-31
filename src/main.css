@@ -1,0 +1,74 @@
+/* Variables */
+
+:root {
+    --color-text-primary: #8F8F8F;
+    --color-text-title: #232323;
+    --color-bg-light-grey: #F2F2F2;
+}
+
+/* Styles */
+body {
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: calc(70% - 1em) calc(30% - 1em);
+    grid-gap: 2em;
+    max-height: 100vh;
+    padding: 1em;
+    width: 90%;
+}
+
+table {
+    border-spacing: 0;
+}
+
+td {
+    padding: .6em;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: var(--color-bg-light-grey);
+}
+
+.card {
+    background-color:#fff;
+    border-radius: 12px;
+    padding: 1em;
+}
+
+.card-content {
+    display: flex;
+}
+
+.card-title {
+    color: var(--color-text-title);
+    border-radius: 12px;
+}
+
+.card .statistic-quantity {
+    color: var(--color-text-title);
+}
+
+.list li {
+    display: flex;    
+    justify-content: space-between;
+}
+
+#root {
+    background-color: grey;
+    display: flex;
+    font-family: new-atten-round,sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.visual-hidden {
+    display: none;
+}
